@@ -9,7 +9,7 @@ AutoPortServe is a Laravel package that helps you start your Laravel development
 You can install the package via composer:
 
 ```bash
-composer require amohamed/autoport-serve
+composer require amohamed/autoportserve
 ```
 
 ## Usage
