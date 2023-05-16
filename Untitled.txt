@@ -1,0 +1,129 @@
+How to solve this error
+
+$ vendor/bin/phpunit tests/ServeCommandTest.php
+PHPUnit 10.1.3 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.1.4
+
+E                                                                   1 / 1 (100%)
+
+Time: 00:00.080, Memory: 16.00 MB
+
+There was 1 error:
+
+1) Tests\ServeCommandTest::testServeCommand
+Error: Class "AutoPortServeServiceProvider" not found
+
+C:\laragon\www\amohamed\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php:206
+C:\laragon\www\amohamed\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php:142
+C:\laragon\www\amohamed\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php:61
+C:\laragon\www\amohamed\vendor\laravel\framework\src\Illuminate\Foundation\Application.php:741
+C:\laragon\www\amohamed\vendor\laravel\framework\src\Illuminate\Foundation\Bootstrap\RegisterProviders.php:17
+C:\laragon\www\amohamed\vendor\orchestra\testbench-core\src\Concerns\CreatesApplication.php:347
+C:\laragon\www\amohamed\vendor\orchestra\testbench-core\src\Concerns\CreatesApplication.php:230
+C:\laragon\www\amohamed\vendor\orchestra\testbench-core\src\TestCase.php:120
+C:\laragon\www\amohamed\vendor\orchestra\testbench-core\src\Concerns\Testing.php:87
+C:\laragon\www\amohamed\vendor\orchestra\testbench-core\src\TestCase.php:51
+
+--
+
+There was 1 risky test:
+
+1) Tests\ServeCommandTest::testServeCommand
+This test did not perform any assertions
+
+C:\laragon\www\amohamed\tests\ServeCommandTest.php:21
+
+ERRORS!
+Tests: 1, Assertions: 0, Errors: 1, Risky: 1.
+
+<?php
+
+namespace Amohamed\AutoportServe\Console;
+
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+
+class ServeCommand extends Command
+{
+    protected $signature = 'serve:dynamic';
+
+    protected $description = 'Serve the application on an available port';
+
+    public function handle()
+    {
+        $port = 8000;
+
+        while ($this->isPortInUse($port)) {
+            $port++;
+        }
+
+        $this->info("Laravel development server started: <http://127.0.0.1:{$port}>");
+
+        $process = new Process(['php', 'artisan', 'serve', '--port', $port]);
+        $process->setWorkingDirectory(base_path());
+        $process->run(function ($type, $buffer) {
+            $this->output->write($buffer);
+        });
+    }
+
+    private function isPortInUse(int $port): bool
+    {
+        $connection = @fsockopen('127.0.0.1', $port);
+
+        if (is_resource($connection))
+        {
+            fclose($connection);
+            return true;
+        }
+
+        return false;
+    }
+}
+
+<?php
+//C:\laragon\www\amohamed\src\AutoPortServeServiceProvider.php
+namespace Amohamed\AutoPortServe;
+use Amohamed\AutoPortServe\Console\ServeCommand;
+
+class AutoPortServeServiceProvider extends ServiceProvider
+{
+    public function register()
+    {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                ServeCommand::class,
+            ]);
+        }
+    }
+}
+
+<?php
+
+namespace Tests;
+
+use Amohamed\AutoPortServe\AutoPortServeServiceProvider;
+use Orchestra\Testbench\TestCase;
+use Illuminate\Support\ServiceProvider;
+use Amohamed\AutoPortServe\Console\ServeCommand;
+
+
+class ServeCommandTest extends TestCase
+{
+    protected function getPackageProviders($app)
+    {
+        return [
+            AutoPortServeServiceProvider::class,
+        ];
+    }
+
+
+    public function testServeCommand()
+    {
+        $this->artisan('serve:dynamic')
+            ->expectsOutput('Laravel development server started: <http://127.0.0.1:8000>')
+            ->assertExitCode(0);
+    }
+}
+

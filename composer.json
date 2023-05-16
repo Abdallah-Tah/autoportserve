@@ -1,0 +1,26 @@
+{
+    "name": "amohamed/autoportserve",
+    "description": "A Laravel package that provides an enhanced serve command.",
+    "type": "library",
+    "require": {
+        "php": ">=5.6",
+        "illuminate/support": ">=5.6"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Amohamed\\AutoPortServe\\": "src/"
+        }
+    },    
+    "require-dev": {
+        
+        "orchestra/testbench": "^8.5",
+        "symfony/process": "^6.2"
+    },
+    "authors": [
+        {
+            "name": "Abdallah Mohamed",
+            "email": "abdallah.mohamed@kyocera-avx.com"
+        }
+    ]
+}
