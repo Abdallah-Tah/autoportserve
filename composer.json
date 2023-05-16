@@ -11,9 +11,17 @@
         "psr-4": {
             "Amohamed\\AutoPortServe\\": "src/"
         }
-    },    
-    "require-dev": {
-        
+    },  
+    
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Amohamed\\AutoPortServe\\AutoPortServeServiceProvider"
+            ]
+        }
+    },
+    
+    "require-dev": {        
         "orchestra/testbench": "^8.5",
         "symfony/process": "^6.2"
     },

@@ -12,6 +12,15 @@ You can install the package via composer:
 composer require amohamed/autoportserve
 ```
 
+Register the service provider in your `config/app.php` file:
+
+```bash
+'providers' => [
+    // ...
+    Amohamed\AutoPortServe\AutoPortServeServiceProvider::class,
+];
+```
+
 ## Usage
 
 Once you have installed the package, you can use the `serve:dynamic` artisan command to start your Laravel server on an available port:

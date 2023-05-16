@@ -31,6 +31,11 @@ class ServeCommand extends Command
 
         $process = new Process(['php', 'artisan', 'serve', '--port', $port]);
         $process->setWorkingDirectory(base_path());
+
+        // Disable the timeout
+        $process->setTimeout(null);
+
+        // Run the process
         $process->run(function ($type, $buffer) {
             $this->output->write($buffer);
         });
@@ -44,8 +49,7 @@ class ServeCommand extends Command
     {
         $connection = @fsockopen('127.0.0.1', $port);
 
-        if (is_resource($connection))
-        {
+        if (is_resource($connection)) {
             fclose($connection);
             return true;
         }
