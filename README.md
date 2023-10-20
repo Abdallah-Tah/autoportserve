@@ -37,10 +37,10 @@ Laravel development server started: <http://127.0.0.1:8000>
 
 ## Features
 
-Dynamic port selection for Laravel server starting from 8000
-Runs npm development server in parallel
-Easy to use, integrates seamlessly with the native php artisan serve command
-Perfect for full-stack developers working on multiple Laravel projects
+###### 1. Dynamic port selection for Laravel server starting from 8000
+###### 2. Runs npm development server in parallel
+###### 3. Easy to use, integrates seamlessly with the native php artisan serve command
+###### 4. Perfect for full-stack developers working on multiple Laravel projects
 ## Testing
 
 You can run the tests with:
